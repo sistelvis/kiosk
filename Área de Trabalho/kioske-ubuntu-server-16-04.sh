@@ -28,7 +28,7 @@ echo "start-pulseaudio-x11" >> $a
 echo "while true; do" >> $a
 #echo "        /usr/bin/firefox" >> $a
 echo "rm -rf ~/.{config,cache}/google-chrome/" >> $a
-echo "google-chrome --kiosk --no-first-run  'http://www.unifap.br/public/toten'" >> $a
+echo "google-chrome --kiosk --no-first-run  'http://www.unifap.br/public/sigu/biblioteca'" >> $a
 echo "done" >> $a
 chmod +x $a >> /dev/null 2>&1
 
