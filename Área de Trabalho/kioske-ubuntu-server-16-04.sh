@@ -2,7 +2,7 @@
 echo "Script de Instalação do Kioske com Ubuntu 16.04"
 echo "1-Atualizando sistema..."
 apt update >> /dev/null 2>&1
-apt upgrade >> /dev/null 2>&1
+apt upgrade -y >> /dev/null 2>&1
 
 echo "2-Instalando dependências..."
 apt install --no-install-recommends xorg openbox pulseaudio -y >> /dev/null 2>&1
