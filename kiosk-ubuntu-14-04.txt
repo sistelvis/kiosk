@@ -1,0 +1,100 @@
+#!/bin/bash
+#Quando da instalação do ubuntu server 
+
+echo "1-Atualizando o sistema"
+
+apt-get update >> /dev/null
+
+
+echo "2-Instalando o Chrome"
+
+wget -O chrome.deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" >> /dev/null 2>&1
+
+dpkg -i chrome.deb >> /dev/null 2>&1
+
+apt-get -f install -y > /dev/null 2>&1
+
+dpkg -i chrome.deb > /dev/install 2>&1
+
+
+echo "3-Instalando ambientação"
+
+apt install --no-install-recommends xorg openbox pulseaudio -y >> /dev/null 2>&1
+
+
+echo "4-Adicionando o usuário quisoque ao grupo AUDIO"
+
+usermod -a -G audio quiosque > /dev/null 2>&1
+
+
+echo "5-Criando Script de inicialização"
+
+
+#criando o script
+
+echo "#!/bin/bash" > /opt/kiosk.sh
+
+echo "xset -dpms" >> /opt/kiosk.sh
+
+echo "xset s off" >> /opt/kiosk.sh
+
+echo "openbox-session &" >> /opt/kiosk.sh
+
+echo "start-pulseaudio-x11" >> /opt/kiosk.sh
+
+echo "while true; do" >> /opt/kiosk.sh
+
+echo "rm -rf ~/.{config,cache}/google-chrome/" >> /opt/kiosk.sh
+
+echo "google-chrome --kiosk --no-first-run  'http://www.unifap.br/public/sigu/biblioteca'" >> /opt/kiosk.sh
+
+echo "done" >> /opt/kiosk.sh
+
+
+echo "Executando o Script"
+
+#dando permissão de execução
+
+chmod +x /opt/kiosk.sh > /dev/null 2>&1
+
+
+echo "Criando a inicialização do sistema"
+
+#criando o arquivo de inicialização
+
+echo "start on (filesystem and stopped udevtrigger)" > /etc/init/kiosk.conf
+
+echo "stop on runlevel [06]" >> /etc/init/kiosk.conf
+
+echo "console output" >> /etc/init/kiosk.conf
+
+echo "emits starting-x" >> /etc/init/kiosk.conf
+
+echo "respawn" >> /etc/init/kiosk.conf
+
+echo "exec sudo -u quiosque startx /etc/X11/Xsession /opt/kiosk.sh --" >> /etc/init/kiosk.conf
+
+
+
+echo "Alterando o X11"
+
+#reconfigurando o X11-commom
+sudo 
+sed -i 's/allowed_users=console/allowed_users=anybody/' /etc/X11/Xwrapper.config > /dev/null 2>&1
+
+
+echo "Iniciando o serviço kiosk"
+
+#iniciando o serviço
+
+start kiosk > /dev/null 2>&1
+
+
+echo "Pressione qualquer tecla para reinciar a máquina..."
+
+read a
+
+
+#reiniciando a maquina
+
+init 6 > /dev/null 2>&1
